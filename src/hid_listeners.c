@@ -17,7 +17,7 @@
 #include <zmk/events/hid_indicators_changed.h>
 #include <zmk/keys.h>
 #include <zmk/keymap.h>
-#include <zmk/hid_usage.h>
+#include <dt-bindings/zmk/hid_usage.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
