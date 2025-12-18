@@ -86,7 +86,7 @@ static int hid_state_listener(const zmk_event_t *eh) {
         };
 
         // todo: will need to track of/off state of each bit to prevent repeated off / on events???
-		LOG_DBG("checking indicators %d, with flag=%d", ev->indicators, cfg->flag);
+		LOG_DBG("checking indicators %d, with flag=%d", ev->indicators, flag);
         if (ev->indicators & flag) {
             LOG_DBG("invoking hid listener %d, indicator=%d", i, cfg->indicator);
             zmk_behavior_queue_add(&event, cfg->bindings[0], true, TAP_MS);
