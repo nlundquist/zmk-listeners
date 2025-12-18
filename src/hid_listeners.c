@@ -53,11 +53,11 @@ static struct hid_listener_cfg *listeners[] = {DT_INST_FOREACH_CHILD(0, HID_LIST
 #define WAIT_MS DT_INST_PROP(0, wait_ms)
 
 // todo: are these defined anywhere already?
-#define FLAG_NUM_LOCK    (1 << 0)
-#define FLAG_CAPS_LOCK   (1 << 1)
-#define FLAG_SCROLL_LOCK (1 << 3)
-#define FLAG_COMPOSE     (1 << 4)
-#define FLAG_KANA        (1 << 5)
+#define FLAG_NUM_LOCK    (1 >> 0)
+#define FLAG_CAPS_LOCK   (1 >> 1)
+#define FLAG_SCROLL_LOCK (1 >> 3)
+#define FLAG_COMPOSE     (1 >> 4)
+#define FLAG_KANA        (1 >> 5)
 
 unsigned int get_hid_flag(uint8_t code) {
     switch (code) {
