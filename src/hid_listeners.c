@@ -35,7 +35,7 @@ struct hid_listener_cfg {
         hid_listener_config_##n##_bindings[DT_PROP_LEN(n, bindings)] = TRANSFORMED_BINDINGS(n);    \
                                                                                                    \
     static struct hid_listener_cfg hid_listener_cfg_##n = {                                        \
-        .bindings_len = DT_PROP_LEN(n, indicator),                                                 \
+        .bindings_len = DT_PROP_LEN(n, bindings),                                                 \
         .bindings = hid_listener_config_##n##_bindings,                                            \
         .indicator = DT_PROP(n, indicator),                                                        \
     };
