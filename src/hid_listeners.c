@@ -92,7 +92,7 @@ static int hid_state_listener(const zmk_event_t *eh) {
             LOG_DBG("invoking hid listener on behavior: %d, indicator=%d", i, cfg->indicator);
             zmk_behavior_queue_add(&event, cfg->bindings[0], true, TAP_MS);
             zmk_behavior_queue_add(&event, cfg->bindings[0], false, WAIT_MS);
-        } else if (cfg->bindings_len > 1 && ((ev->indicators & flag) == 0 && (last_indicators & flag) != 0) {
+        } else if (cfg->bindings_len > 1 && (ev->indicators & flag) == 0 && (last_indicators & flag) != 0) {
 			LOG_DBG("invoking hid listener off behavior: %d, indicator=%d", i, cfg->indicator);
             zmk_behavior_queue_add(&event, cfg->bindings[1], true, TAP_MS);
             zmk_behavior_queue_add(&event, cfg->bindings[1], false, WAIT_MS);
