@@ -70,6 +70,8 @@ unsigned int get_hid_flag(uint8_t code) {
     }
 }
 
+static int last_indicators = 0;
+
 static int hid_state_listener(const zmk_event_t *eh) {
     struct zmk_hid_indicators_changed *ev = as_zmk_hid_indicators_changed(eh);
 
@@ -85,19 +87,19 @@ static int hid_state_listener(const zmk_event_t *eh) {
 #endif
         };
 
-        // todo: will need to track of/off state of each bit to prevent repeated off / on events???
 		LOG_DBG("checking indicators %d, with flag=%d", ev->indicators, flag);
-        if (ev->indicators & flag) {
-            LOG_DBG("invoking hid listener %d, indicator=%d", i, cfg->indicator);
+        if ((ev->indicators & flag) != 0 && (last_indicators & flag) == 0) {
+            LOG_DBG("invoking hid listener on behavior: %d, indicator=%d", i, cfg->indicator);
             zmk_behavior_queue_add(&event, cfg->bindings[0], true, TAP_MS);
             zmk_behavior_queue_add(&event, cfg->bindings[0], false, WAIT_MS);
-        } else {
-            if (cfg->bindings_len > 1) { // send off event
-                zmk_behavior_queue_add(&event, cfg->bindings[1], true, TAP_MS);
-                zmk_behavior_queue_add(&event, cfg->bindings[1], false, WAIT_MS);
-            }
+        } else if (cfg->bindings_len > 1 && ((ev->indicators & flag) == 0 && (last_indicators & flag) != 0) {
+			LOG_DBG("invoking hid listener off behavior: %d, indicator=%d", i, cfg->indicator);
+            zmk_behavior_queue_add(&event, cfg->bindings[1], true, TAP_MS);
+            zmk_behavior_queue_add(&event, cfg->bindings[1], false, WAIT_MS);
         }
     }
+
+	last_indicators = ev->indicators;
 
     return ZMK_EV_EVENT_BUBBLE;
 }
