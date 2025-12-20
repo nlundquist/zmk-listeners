@@ -35,7 +35,7 @@ struct hid_listener_cfg {
         hid_listener_config_##n##_bindings[DT_PROP_LEN(n, bindings)] = TRANSFORMED_BINDINGS(n);    \
                                                                                                    \
     static struct hid_listener_cfg hid_listener_cfg_##n = {                                        \
-        .bindings_len = DT_PROP_LEN(n, bindings),                                                 \
+        .bindings_len = DT_PROP_LEN(n, bindings),                                                  \
         .bindings = hid_listener_config_##n##_bindings,                                            \
         .indicator = DT_PROP(n, indicator),                                                        \
     };
@@ -53,20 +53,26 @@ static struct hid_listener_cfg *listeners[] = {DT_INST_FOREACH_CHILD(0, HID_LIST
 #define WAIT_MS DT_INST_PROP(0, wait_ms)
 
 // todo: are these defined anywhere already?
-#define FLAG_NUM_LOCK    (1 << 0)
-#define FLAG_CAPS_LOCK   (1 << 1)
+#define FLAG_NUM_LOCK (1 << 0)
+#define FLAG_CAPS_LOCK (1 << 1)
 #define FLAG_SCROLL_LOCK (1 << 2)
-#define FLAG_COMPOSE     (1 << 3)
-#define FLAG_KANA        (1 << 4)
+#define FLAG_COMPOSE (1 << 3)
+#define FLAG_KANA (1 << 4)
 
 unsigned int get_hid_flag(uint8_t code) {
     switch (code) {
-        case HID_USAGE_LED_NUM_LOCK: return FLAG_NUM_LOCK;
-        case HID_USAGE_LED_CAPS_LOCK: return FLAG_CAPS_LOCK;
-        case HID_USAGE_LED_SCROLL_LOCK: return FLAG_SCROLL_LOCK;
-        case HID_USAGE_LED_COMPOSE: return FLAG_COMPOSE;
-        case HID_USAGE_LED_KANA: return FLAG_KANA;
-        default: return 0;
+    case HID_USAGE_LED_NUM_LOCK:
+        return FLAG_NUM_LOCK;
+    case HID_USAGE_LED_CAPS_LOCK:
+        return FLAG_CAPS_LOCK;
+    case HID_USAGE_LED_SCROLL_LOCK:
+        return FLAG_SCROLL_LOCK;
+    case HID_USAGE_LED_COMPOSE:
+        return FLAG_COMPOSE;
+    case HID_USAGE_LED_KANA:
+        return FLAG_KANA;
+    default:
+        return 0;
     }
 }
 
@@ -87,19 +93,20 @@ static int hid_state_listener(const zmk_event_t *eh) {
 #endif
         };
 
-		LOG_DBG("checking indicators %d, with flag=%d", ev->indicators, flag);
+        LOG_DBG("checking indicators %d, with flag=%d", ev->indicators, flag);
         if ((ev->indicators & flag) != 0 && (last_indicators & flag) == 0) {
             LOG_DBG("invoking hid listener on behavior: %d, indicator=%d", i, cfg->indicator);
             zmk_behavior_queue_add(&event, cfg->bindings[0], true, TAP_MS);
             zmk_behavior_queue_add(&event, cfg->bindings[0], false, WAIT_MS);
-        } else if (cfg->bindings_len > 1 && (ev->indicators & flag) == 0 && (last_indicators & flag) != 0) {
-			LOG_DBG("invoking hid listener off behavior: %d, indicator=%d", i, cfg->indicator);
+        } else if (cfg->bindings_len > 1 && (ev->indicators & flag) == 0 &&
+                   (last_indicators & flag) != 0) {
+            LOG_DBG("invoking hid listener off behavior: %d, indicator=%d", i, cfg->indicator);
             zmk_behavior_queue_add(&event, cfg->bindings[1], true, TAP_MS);
             zmk_behavior_queue_add(&event, cfg->bindings[1], false, WAIT_MS);
         }
     }
 
-	last_indicators = ev->indicators;
+    last_indicators = ev->indicators;
 
     return ZMK_EV_EVENT_BUBBLE;
 }
