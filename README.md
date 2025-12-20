@@ -117,7 +117,7 @@ Each listener is defined as a child node.
 
 Each listener is defined as a child node.
 
-- `indicator` (required): A macro from `dt-binding/zmk/hid_usage.h` representing either the NUM LOCK, CAPS LOCK, SCROLL LOCK, KANA, or COMPOSE LED state. These are the only USB HID LED states emitted by the underlying ZMK event.
+- `indicator` (required): A constant from `dt-binding/zmk/hid_usage.h` representing either the NUM LOCK, CAPS LOCK, SCROLL LOCK, KANA, or COMPOSE LED state. These are the only USB HID LED states emitted by the underlying ZMK event.
 - `bindings` (required): The first behavior is triggered on key press, and the second on key release. Use `&none` for the other if you need only one. Second binding (key release) can be omitted if not needed.
 
 ## References
